@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+no<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -34,23 +34,6 @@
         </div>
 
         <div id="daftarProduk" class="space-y-4 mb-8"></div>
-
-        <div class="mt-10 border-t pt-6">
-            <p class="text-xs text-center text-gray-400 mb-3 uppercase font-bold tracking-widest">Pencadangan Data</p>
-            <div class="grid grid-cols-1 gap-3">
-                <button onclick="downloadBackup()" class="bg-gray-800 text-white p-2 rounded text-sm font-bold hover:bg-black">
-                    📥 DOWNLOAD BACKUP (.json)
-                </button>
-                <div class="relative">
-                    <input type="file" id="uploadFile" onchange="restoreBackup(event)" class="hidden">
-                    <label for="uploadFile" class="block bg-orange-500 text-white p-2 rounded text-sm text-center font-bold cursor-pointer hover:bg-orange-600">
-                        📤 PILIH FILE BACKUP
-                    </label>
-                </div>
-            </div>
-            <p class="text-[10px] text-gray-400 mt-2 text-center italic">*Simpan file hasil download ke Google Drive atau WhatsApp agar aman.</p>
-        </div>
-    </div>
 
     <script>
         let produkList = JSON.parse(localStorage.getItem('produk')) || [];
@@ -189,3 +172,4 @@
     </script>
 </body>
 </html>
+
