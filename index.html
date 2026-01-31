@@ -4,134 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stok Pintar Manajemen</title>
-    <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: sans-serif; padding: 15px; background: #f0f2f5; }
-        .tabs { display: flex; gap: 5px; margin-bottom: 15px; overflow-x: auto; }
-        .tab { padding: 8px 15px; background: #ccc; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; }
-        .tab.active { background: #2563eb; color: white; }
-        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; }
-        .btn-blue { background: #2563eb; color: white; border: none; font-weight: bold; }
-        .list-item { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .stok-controls { display: flex; align-items: center; gap: 10px; }
-        .btn-stok { width: 35px; height: 35px; border-radius: 50%; border: none; color: white; font-weight: bold; }
+        body { font-family: sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 70px; }
+        .header { background: #2563eb; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
+        .container { padding: 15px; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        .btn-blue { background: #2563eb; color: white; border: none; font-weight: bold; cursor: pointer; }
+        
+        /* Navigasi Bawah (Tab Bar) */
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; border-top: 1px solid #ddd; padding: 10px 0; }
+        .nav-item { border: none; background: none; font-size: 12px; font-weight: bold; color: #666; cursor: pointer; display: flex; flex-direction: column; align-items: center; width: auto; }
+        .nav-item.active { color: #2563eb; }
+
+        .list-item { border-bottom: 1px solid #eee; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .stok-box { display: flex; align-items: center; gap: 10px; }
+        .btn-qty { width: 35px; height: 35px; border-radius: 50%; border: none; color: white; font-weight: bold; font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <h2 style="color: #2563eb; text-align: center;">Manajemen Produk</h2>
+<div class="header">
+    <h3 id="view-title">Tambah Produk</h3>
+</div>
 
-    <div class="tabs">
-        <button class="tab active" id="btn-NARITA" onclick="filterData('NARITA')">NARITA</button>
-        <button class="tab" id="btn-VR" onclick="filterData('VR')">VR</button>
-        <button class="tab" id="btn-KUDUS" onclick="filterData('KUDUS')">KUDUS</button>
-        <button class="tab" id="btn-LAIN" onclick="filterData('LAIN')">LAIN LAIN</button>
-    </div>
-
-    <div class="card">
-        <strong>TAMBAH PRODUK</strong>
-        <input type="text" id="kode" placeholder="Kode Produk">
-        <input type="text" id="nama" placeholder="Nama Produk">
-        <div style="display: flex; gap: 5px;">
-            <input type="number" id="hargaBeli" placeholder="Dasar">
-            <input type="number" id="hargaJual" placeholder="Harga Jual">
-        </div>
-        <select id="kategori">
-            <option value="NARITA">NARITA</option>
-            <option value="VR">VR</option>
-            <option value="KUDUS">KUDUS</option>
-            <option value="LAIN">LAIN LAIN</option>
-        </select>
-        <button class="btn-blue" onclick="simpan()">SIMPAN PRODUK</button>
-    </div>
-
-    <div class="card">
-        <input type="text" id="cari" placeholder="🔍 Cari nama atau kode produk..." onkeyup="renderDaftar()">
-    </div>
-
-    <div class="card" id="daftarProduk">
+<div class="container">
+    <div id="page-home" class="page active">
+        <div class="card">
+            <input type="text" id="kode" placeholder="Kode Produk">
+            <input type="text" id="nama" placeholder="Nama Produk">
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="beli" placeholder="Harga Dasar">
+                <input type="number" id="jual" placeholder="Harga Jual">
+            </div>
+            <select id="kategori">
+                <option value="NARITA">NARITA</option>
+                <option value="VR">VR</option>
+                <option value="KUDUS">KUDUS</option>
+                <option value="LAIN">LAIN LAIN</option>
+            </select>
+            <button class="btn-blue" onclick="simpan()">SIMPAN PRODUK</button>
         </div>
 
-    <div class="card" style="text-align: center;">
-        <p style="font-size: 12px; color: gray;">PENCADANGAN DATA</p>
-        <button onclick="exportData()" style="background: #333; color: white;">DOWNLOAD BACKUP</button>
-        <input type="file" id="f" style="display:none" onchange="importData(event)">
-        <button onclick="document.getElementById('f').click()" style="background: #f97316; color: white;">PILIH FILE BACKUP</button>
+        <div class="card" style="text-align: center;">
+            <p style="font-size: 12px; color: gray;">PENCADANGAN DATA</p>
+            <button onclick="exportData()" style="background: #333; color: white;">DOWNLOAD BACKUP</button>
+            <input type="file" id="f" style="display:none" onchange="importData(event)">
+            <button onclick="document.getElementById('f').click()" style="background: #f97316; color: white;">PILIH FILE BACKUP</button>
+        </div>
     </div>
 
-    <script>
-        let kategoriAktif = 'NARITA';
-        let database = JSON.parse(localStorage.getItem('db_stok')) || [];
+    <div id="page-list" class="page">
+        <div class="card">
+            <input type="text" id="cari" placeholder="🔍 Cari nama atau kode..." onkeyup="renderList()">
+        </div>
+        <div class="card" id="product-container">
+            </div>
+    </div>
+</div>
 
-        function simpan() {
-            const p = {
-                kode: document.getElementById('kode').value,
-                nama: document.getElementById('nama').value,
-                beli: document.getElementById('hargaBeli').value,
-                jual: document.getElementById('hargaJual').value,
-                kat: document.getElementById('kategori').value,
-                stok: 0
-            };
-            if(!p.nama) return alert('Nama harus diisi');
-            database.push(p);
-            localStorage.setItem('db_stok', JSON.stringify(database));
-            alert('Tersimpan!');
-            renderDaftar();
+<div class="nav-bottom">
+    <button class="nav-item active" id="nav-home" onclick="showPage('home')">🏠<br>TAMBAH</button>
+    <button class="nav-item" id="nav-narita" onclick="showPage('NARITA')">📦<br>NARITA</button>
+    <button class="nav-item" id="nav-vr" onclick="showPage('VR')">📦<br>VR</button>
+    <button class="nav-item" id="nav-kudus" onclick="showPage('KUDUS')">📦<br>KUDUS</button>
+    <button class="nav-item" id="nav-lain" onclick="showPage('LAIN')">📦<br>LAIN</button>
+</div>
+
+<script>
+    let db = JSON.parse(localStorage.getItem('db_stok')) || [];
+    let currentKat = '';
+
+    function showPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        
+        if(page === 'home') {
+            document.getElementById('page-home').classList.add('active');
+            document.getElementById('nav-home').classList.add('active');
+            document.getElementById('view-title').innerText = "Tambah Produk";
+        } else {
+            currentKat = page;
+            document.getElementById('page-list').classList.add('active');
+            document.getElementById('nav-' + (page === 'LAIN' ? 'lain' : page.toLowerCase())).classList.add('active');
+            document.getElementById('view-title').innerText = "Data Produk " + page;
+            renderList();
         }
+    }
 
-        function filterData(kat) {
-            kategoriAktif = kat;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('btn-' + (kat === 'LAIN LAIN' ? 'LAIN' : kat)).classList.add('active');
-            renderDaftar();
-        }
+    function simpan() {
+        const item = {
+            kode: document.getElementById('kode').value,
+            nama: document.getElementById('nama').value,
+            beli: document.getElementById('beli').value,
+            jual: document.getElementById('jual').value,
+            kat: document.getElementById('kategori').value,
+            stok: 0
+        };
+        if(!item.nama) return alert("Nama wajib diisi!");
+        db.push(item);
+        localStorage.setItem('db_stok', JSON.stringify(db));
+        alert("Produk Berhasil Disimpan di Kategori " + item.kat);
+        document.getElementById('nama').value = '';
+        document.getElementById('kode').value = '';
+    }
 
-        function updateStok(index, nilai) {
-            database[index].stok = Math.max(0, parseInt(database[index].stok) + nilai);
-            localStorage.setItem('db_stok', JSON.stringify(database));
-            renderDaftar();
-        }
-
-        function renderDaftar() {
-            const cari = document.getElementById('cari').value.toLowerCase();
-            const container = document.getElementById('daftarProduk');
-            container.innerHTML = '';
-            
-            database.forEach((p, index) => {
-                if(p.kat === kategoriAktif && (p.nama.toLowerCase().includes(cari) || p.kode.toLowerCase().includes(cari))) {
-                    container.innerHTML += `
-                        <div class="list-item">
-                            <div>
-                                <strong>${p.nama}</strong><br>
-                                <small>Beli: ${p.beli} | Jual: ${p.jual}</small>
-                            </div>
-                            <div class="stok-controls">
-                                <button class="btn-stok" style="background:red" onclick="updateStok(${index}, -1)">-</button>
-                                <strong>${p.stok}</strong>
-                                <button class="btn-stok" style="background:green" onclick="updateStok(${index}, 1)">+</button>
-                            </div>
+    function renderList() {
+        const q = document.getElementById('cari').value.toLowerCase();
+        const container = document.getElementById('product-container');
+        container.innerHTML = db.length === 0 ? '<p style="text-align:center">Belum ada data</p>' : '';
+        
+        db.forEach((p, i) => {
+            if(p.kat === currentKat && (p.nama.toLowerCase().includes(q) || p.kode.toLowerCase().includes(q))) {
+                container.innerHTML += `
+                    <div class="list-item">
+                        <div>
+                            <strong>${p.nama}</strong><br>
+                            <small>ID: ${p.kode} | Beli: ${p.beli} | Jual: ${p.jual}</small>
                         </div>
-                    `;
-                }
-            });
-        }
+                        <div class="stok-box">
+                            <button class="btn-qty" style="background:#ef4444" onclick="setStok(${i},-1)">-</button>
+                            <strong>${p.stok}</strong>
+                            <button class="btn-qty" style="background:#22c55e" onclick="setStok(${i},1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
 
-        function exportData() {
-            const blob = new Blob([JSON.stringify(database)], {type: 'application/json'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'backup.json';
-            a.click();
-        }
+    function setStok(i, n) {
+        db[i].stok = Math.max(0, parseInt(db[i].stok) + n);
+        localStorage.setItem('db_stok', JSON.stringify(db));
+        renderList();
+    }
 
-        function importData(e) {
-            const r = new FileReader();
-            r.onload = () => { database = JSON.parse(r.result); localStorage.setItem('db_stok', r.result); renderDaftar(); };
-            r.readAsText(e.target.files[0]);
-        }
+    function exportData() {
+        const blob = new Blob([JSON.stringify(db)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'backup_stok.json';
+        a.click();
+    }
 
-        renderDaftar(); // Jalankan saat startup
-    </script>
+    function importData(e) {
+        const r = new FileReader();
+        r.onload = () => { db = JSON.parse(r.result); localStorage.setItem('db_stok', r.result); alert("Data dipulihkan!"); location.reload(); };
+        r.readAsText(e.target.files[0]);
+    }
+</script>
 </body>
-</html>
+        </html>
