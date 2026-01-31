@@ -5,39 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stok Pintar Manajemen</title>
     <style>
-        body { font-family: sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 70px; }
+        body { font-family: sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 80px; }
         .header { background: #2563eb; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
         .container { padding: 15px; }
         .page { display: none; }
         .page.active { display: block; }
         .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        
+        /* Layout Input Harga: Jual lebih besar */
+        .harga-container { display: flex; gap: 10px; }
+        .input-dasar { flex: 1; } /* Kotak kecil */
+        .input-jual { flex: 2; }  /* Kotak lebih besar */
+
         input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
         .btn-blue { background: #2563eb; color: white; border: none; font-weight: bold; cursor: pointer; }
         
-        /* Navigasi Bawah (Tab Bar) */
         .nav-bottom { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; border-top: 1px solid #ddd; padding: 10px 0; }
-        .nav-item { border: none; background: none; font-size: 12px; font-weight: bold; color: #666; cursor: pointer; display: flex; flex-direction: column; align-items: center; width: auto; }
+        .nav-item { border: none; background: none; font-size: 11px; font-weight: bold; color: #666; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: #2563eb; }
 
-        .list-item { border-bottom: 1px solid #eee; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
-        .stok-box { display: flex; align-items: center; gap: 10px; }
-        .btn-qty { width: 35px; height: 35px; border-radius: 50%; border: none; color: white; font-weight: bold; font-size: 20px; }
+        .list-item { border-bottom: 1px solid #eee; padding: 12px 0; }
+        .item-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .stok-controls { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px; border-radius: 8px; }
+        .btn-qty { width: 40px; height: 40px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 20px; cursor: pointer; }
+        .btn-hapus { background: none; border: none; color: #ef4444; font-size: 12px; font-weight: bold; cursor: pointer; width: auto; padding: 0; margin-top: 5px; text-align: left; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h3 id="view-title">Tambah Produk</h3>
-</div>
+<div class="header"><h3 id="view-title">Tambah Produk</h3></div>
 
 <div class="container">
     <div id="page-home" class="page active">
         <div class="card">
             <input type="text" id="kode" placeholder="Kode Produk">
             <input type="text" id="nama" placeholder="Nama Produk">
-            <div style="display: flex; gap: 10px;">
-                <input type="number" id="beli" placeholder="Harga Dasar">
-                <input type="number" id="jual" placeholder="Harga Jual">
+            <div class="harga-container">
+                <input type="number" id="beli" class="input-dasar" placeholder="Dasar">
+                <input type="number" id="jual" class="input-jual" placeholder="Harga Jual (Lebih Besar)">
             </div>
             <select id="kategori">
                 <option value="NARITA">NARITA</option>
@@ -49,10 +54,10 @@
         </div>
 
         <div class="card" style="text-align: center;">
-            <p style="font-size: 12px; color: gray;">PENCADANGAN DATA</p>
+            <p style="font-size: 12px; color: gray;">CADANGAN DATA</p>
             <button onclick="exportData()" style="background: #333; color: white;">DOWNLOAD BACKUP</button>
             <input type="file" id="f" style="display:none" onchange="importData(event)">
-            <button onclick="document.getElementById('f').click()" style="background: #f97316; color: white;">PILIH FILE BACKUP</button>
+            <button onclick="document.getElementById('f').click()" style="background: #f97316; color: white; margin-top: 8px;">PILIH FILE BACKUP</button>
         </div>
     </div>
 
@@ -60,13 +65,12 @@
         <div class="card">
             <input type="text" id="cari" placeholder="🔍 Cari nama atau kode..." onkeyup="renderList()">
         </div>
-        <div class="card" id="product-container">
-            </div>
+        <div id="product-container"></div>
     </div>
 </div>
 
 <div class="nav-bottom">
-    <button class="nav-item active" id="nav-home" onclick="showPage('home')">🏠<br>TAMBAH</button>
+    <button class="nav-item active" id="nav-home" onclick="showPage('home')">➕<br>TAMBAH</button>
     <button class="nav-item" id="nav-narita" onclick="showPage('NARITA')">📦<br>NARITA</button>
     <button class="nav-item" id="nav-vr" onclick="showPage('VR')">📦<br>VR</button>
     <button class="nav-item" id="nav-kudus" onclick="showPage('KUDUS')">📦<br>KUDUS</button>
@@ -80,7 +84,6 @@
     function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        
         if(page === 'home') {
             document.getElementById('page-home').classList.add('active');
             document.getElementById('nav-home').classList.add('active');
@@ -89,13 +92,14 @@
             currentKat = page;
             document.getElementById('page-list').classList.add('active');
             document.getElementById('nav-' + (page === 'LAIN' ? 'lain' : page.toLowerCase())).classList.add('active');
-            document.getElementById('view-title').innerText = "Data Produk " + page;
+            document.getElementById('view-title').innerText = "Data " + page;
             renderList();
         }
     }
 
     function simpan() {
         const item = {
+            id: Date.now(), // ID Unik untuk hapus
             kode: document.getElementById('kode').value,
             nama: document.getElementById('nama').value,
             beli: document.getElementById('beli').value,
@@ -106,37 +110,47 @@
         if(!item.nama) return alert("Nama wajib diisi!");
         db.push(item);
         localStorage.setItem('db_stok', JSON.stringify(db));
-        alert("Produk Berhasil Disimpan di Kategori " + item.kat);
-        document.getElementById('nama').value = '';
-        document.getElementById('kode').value = '';
+        alert("Tersimpan di " + item.kat);
+        document.getElementById('nama').value = ''; document.getElementById('kode').value = '';
+    }
+
+    function hapusProduk(id) {
+        if(confirm("Hapus produk ini?")) {
+            db = db.filter(p => p.id !== id);
+            localStorage.setItem('db_stok', JSON.stringify(db));
+            renderList();
+        }
     }
 
     function renderList() {
         const q = document.getElementById('cari').value.toLowerCase();
         const container = document.getElementById('product-container');
-        container.innerHTML = db.length === 0 ? '<p style="text-align:center">Belum ada data</p>' : '';
+        container.innerHTML = '';
         
-        db.forEach((p, i) => {
+        db.forEach((p) => {
             if(p.kat === currentKat && (p.nama.toLowerCase().includes(q) || p.kode.toLowerCase().includes(q))) {
                 container.innerHTML += `
-                    <div class="list-item">
-                        <div>
-                            <strong>${p.nama}</strong><br>
-                            <small>ID: ${p.kode} | Beli: ${p.beli} | Jual: ${p.jual}</small>
+                    <div class="card list-item">
+                        <div class="item-info">
+                            <div>
+                                <strong style="font-size:18px">${p.nama}</strong><br>
+                                <small>ID: ${p.kode} | Beli: ${p.beli} | Jual: ${p.jual}</small><br>
+                                <button class="btn-hapus" onclick="hapusProduk(${p.id})">🗑️ HAPUS PRODUK</button>
+                            </div>
                         </div>
-                        <div class="stok-box">
-                            <button class="btn-qty" style="background:#ef4444" onclick="setStok(${i},-1)">-</button>
-                            <strong>${p.stok}</strong>
-                            <button class="btn-qty" style="background:#22c55e" onclick="setStok(${i},1)">+</button>
+                        <div class="stok-controls">
+                            <button class="btn-qty" style="background:#ef4444" onclick="setStok(${p.id},-1)">-</button>
+                            <span style="font-size:20px">Stok: <b>${p.stok}</b></span>
+                            <button class="btn-qty" style="background:#22c55e" onclick="setStok(${p.id},1)">+</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }
         });
     }
 
-    function setStok(i, n) {
-        db[i].stok = Math.max(0, parseInt(db[i].stok) + n);
+    function setStok(id, n) {
+        const idx = db.findIndex(p => p.id === id);
+        db[idx].stok = Math.max(0, parseInt(db[idx].stok) + n);
         localStorage.setItem('db_stok', JSON.stringify(db));
         renderList();
     }
@@ -145,15 +159,15 @@
         const blob = new Blob([JSON.stringify(db)], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'backup_stok.json';
+        a.download = 'backup.json';
         a.click();
     }
 
     function importData(e) {
         const r = new FileReader();
-        r.onload = () => { db = JSON.parse(r.result); localStorage.setItem('db_stok', r.result); alert("Data dipulihkan!"); location.reload(); };
+        r.onload = () => { db = JSON.parse(r.result); localStorage.setItem('db_stok', r.result); location.reload(); };
         r.readAsText(e.target.files[0]);
     }
 </script>
 </body>
-        </html>
+</html>
