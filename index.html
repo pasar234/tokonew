@@ -3,191 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="description" content="Aplikasi manajemen stok produk dengan kategori NARITA, VR, KUDUS, dan LAIN LAIN">
     <title>Stok Pintar Manajemen</title>
-    <style>
-        body { font-family: sans-serif; margin: 0; background: #f0f2f5; color: #333; }
-        .nav-top { background: white; display: flex; justify-content: space-around; border-bottom: 2px solid #2563eb; padding: 10px 0; position: sticky; top: 0; z-index: 1000; overflow-x: auto; }
-        .nav-item { border: none; background: none; font-size: 11px; font-weight: bold; color: #666; cursor: pointer; display: flex; flex-direction: column; align-items: center; min-width: 65px; }
-        .nav-item.active { color: #2563eb; }
-        .container { padding: 15px; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
-        .btn-blue { background: #2563eb; color: white; border: none; font-weight: bold; cursor: pointer; }
-        .price-tag { font-size: 26px; font-weight: 900; color: #1e293b; margin: 5px 0; }
-        .product-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .stok-control { border: 1.5px solid #333; padding: 5px; border-radius: 8px; text-align: center; min-width: 80px; background: #fff; }
-        .btn-qty { width: 30px; height: 30px; border: 1px solid #333; background: white; font-weight: bold; cursor: pointer; border-radius: 4px; }
-        .btn-hapus { background: none; border: none; color: #ef4444; font-size: 12px; font-weight: bold; cursor: pointer; padding: 0; margin-top: 10px; }
-        
-        /* Tombol Backup */
-        .btn-backup { background: #334155; color: white; border: none; margin-top: 10px; }
-        .btn-restore { background: #f97316; color: white; border: none; }
-    </style>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2633/2633807.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-<div class="nav-top">
-    <button class="nav-item active" id="nav-home" onclick="showPage('home')">➕<br>TAMBAH</button>
-    <button class="nav-item" id="nav-NARITA" onclick="showPage('NARITA')">📦<br>NARITA</button>
-    <button class="nav-item" id="nav-VR" onclick="showPage('VR')">📦<br>VR</button>
-    <button class="nav-item" id="nav-KUDUS" onclick="showPage('KUDUS')">📦<br>KUDUS</button>
-    <button class="nav-item" id="nav-LAIN" onclick="showPage('LAIN')">📦<br>LAIN</button>
-</div>
-
-<div class="container">
-    <div id="page-home" class="page active">
-        <div class="card">
-            <strong>TAMBAH PRODUK BARU</strong>
-            <input type="text" id="kode" placeholder="Kode Produk">
-            <input type="text" id="nama" placeholder="Nama Produk">
-            <div style="display: flex; gap: 10px;">
-                <input type="number" id="beli" style="flex:1" placeholder="Dasar">
-                <input type="number" id="jual" style="flex:2" placeholder="Harga Jual">
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-boxes"></i> Stok Pintar</h1>
+                <p class="app-subtitle">Manajemen Stok Produk</p>
             </div>
-            <select id="kategori">
-                <option value="NARITA">NARITA</option>
-                <option value="VR">VR</option>
-                <option value="KUDUS">KUDUS</option>
-                <option value="LAIN">LAIN LAIN</option>
-            </select>
-            <button class="btn-blue" onclick="simpanData()">SIMPAN PRODUK</button>
-        </div>
+            <div class="app-actions">
+                <button class="btn-icon" id="installBtn" title="Install Aplikasi">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button class="btn-icon" id="themeToggle" title="Ubah Tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
 
-        <div class="card" style="text-align: center;">
-            <p style="font-size: 12px; color: gray; font-weight: bold;">PENCADANGAN DATA</p>
-            <button class="btn-backup" onclick="exportData()">💾 DOWNLOAD BACKUP (.json)</button>
-            <input type="file" id="fileInput" style="display:none" onchange="importData(event)">
-            <button class="btn-restore" onclick="document.getElementById('fileInput').click()">📂 PILIH FILE BACKUP</button>
-            <p style="font-size: 10px; color: #64748b; margin-top: 8px;">*Simpan file ke WA atau Google Drive agar aman.</p>
-        </div>
-    </div>
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <div class="nav-container">
+                <button class="nav-btn active" data-page="home">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>TAMBAH</span>
+                </button>
+                <button class="nav-btn" data-page="NARITA">
+                    <i class="fas fa-box"></i>
+                    <span>NARITA</span>
+                </button>
+                <button class="nav-btn" data-page="VR">
+                    <i class="fas fa-box"></i>
+                    <span>VR</span>
+                </button>
+                <button class="nav-btn" data-page="KUDUS">
+                    <i class="fas fa-box"></i>
+                    <span>KUDUS</span>
+                </button>
+                <button class="nav-btn" data-page="LAIN">
+                    <i class="fas fa-boxes-stacked"></i>
+                    <span>LAIN</span>
+                </button>
+            </div>
+        </nav>
 
-    <div id="page-list" class="page">
-        <div class="card">
-            <input type="text" id="cari" placeholder="🔍 Cari nama atau kode..." onkeyup="renderData()">
-        </div>
-        <div id="list-container"></div>
-    </div>
-</div>
-
-<script>
-    // Nama database harus konsisten agar data tidak hilang
-    let database = JSON.parse(localStorage.getItem('stok_app_db')) || [];
-    let katSekarang = '';
-
-    function showPage(p) {
-        document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(nv => nv.classList.remove('active'));
-        if(p === 'home') {
-            document.getElementById('page-home').classList.add('active');
-            document.getElementById('nav-home').classList.add('active');
-        } else {
-            katSekarang = p;
-            document.getElementById('page-list').classList.add('active');
-            document.getElementById('nav-' + p).classList.add('active');
-            renderData();
-        }
-    }
-
-    function simpanData() {
-        const n = document.getElementById('nama').value;
-        const k = document.getElementById('kode').value;
-        const b = document.getElementById('beli').value;
-        const j = document.getElementById('jual').value;
-        const kat = document.getElementById('kategori').value;
-
-        if(!n || !j) return alert("Nama dan Harga Jual wajib diisi!");
-
-        const produkBaru = { id: Date.now(), nama: n, kode: k, beli: b, jual: j, kategori: kat, stok: 0 };
-        database.push(produkBaru);
-        localStorage.setItem('stok_app_db', JSON.stringify(database));
-        
-        alert("Berhasil disimpan ke " + kat);
-        document.getElementById('nama').value = '';
-        document.getElementById('kode').value = '';
-        document.getElementById('beli').value = '';
-        document.getElementById('jual').value = '';
-    }
-
-    function renderData() {
-        const container = document.getElementById('list-container');
-        const search = document.getElementById('cari').value.toLowerCase();
-        container.innerHTML = database.length === 0 ? '<p style="text-align:center">Kosong</p>' : '';
-
-        database.forEach((item) => {
-            if(item.kategori === katSekarang && (item.nama.toLowerCase().includes(search) || item.kode.toLowerCase().includes(search))) {
-                container.innerHTML += `
-                    <div class="card">
-                        <div class="product-header">
-                            <div style="flex:1">
-                                <strong style="font-size:18px">${item.nama}</strong><br>
-                                <small>ID: ${item.kode} | Beli: ${item.beli}</small>
-                                <div class="price-tag">JUAL: ${item.jual}</div>
-                                <button class="btn-hapus" onclick="hapus(${item.id})">🗑️ HAPUS PRODUK</button>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Page - Tambah Produk -->
+            <div id="page-home" class="page active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-plus-circle"></i> TAMBAH PRODUK BARU</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="kode">Kode Produk</label>
+                            <input type="text" id="kode" placeholder="Masukkan kode produk" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="nama">Nama Produk</label>
+                            <input type="text" id="nama" placeholder="Masukkan nama produk" class="form-input" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="beli">Harga Dasar</label>
+                                <input type="number" id="beli" placeholder="Harga dasar" class="form-input">
                             </div>
-                            <div class="stok-control">
-                                <small>STOK</small><br>
-                                <button class="btn-qty" onclick="ubahStok(${item.id}, -1)">-</button>
-                                <strong style="margin: 0 5px">${item.stok}</strong>
-                                <button class="btn-qty" onclick="ubahStok(${item.id}, 1)">+</button>
+                            <div class="form-group">
+                                <label for="jual">Harga Jual</label>
+                                <input type="number" id="jual" placeholder="Harga jual" class="form-input" required>
                             </div>
                         </div>
-                    </div>`;
-            }
-        });
-    }
+                        <div class="form-group">
+                            <label for="kategori">Kategori</label>
+                            <select id="kategori" class="form-select">
+                                <option value="NARITA">NARITA</option>
+                                <option value="VR">VR</option>
+                                <option value="KUDUS">KUDUS</option>
+                                <option value="LAIN">LAIN LAIN</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary btn-block" id="simpanProduk">
+                            <i class="fas fa-save"></i> SIMPAN PRODUK
+                        </button>
+                    </div>
+                </div>
 
-    function ubahStok(id, val) {
-        const idx = database.findIndex(x => x.id === id);
-        database[idx].stok = Math.max(0, parseInt(database[idx].stok) + val);
-        localStorage.setItem('stok_app_db', JSON.stringify(database));
-        renderData();
-    }
+                <!-- Backup/Restore Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-database"></i> PENCADANGAN DATA</h2>
+                    </div>
+                    <div class="card-body text-center">
+                        <button class="btn-secondary btn-block" id="backupBtn">
+                            <i class="fas fa-download"></i> DOWNLOAD BACKUP (.json)
+                        </button>
+                        
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="fileInput" accept=".json" class="file-input">
+                            <label for="fileInput" class="btn-warning btn-block">
+                                <i class="fas fa-upload"></i> PILIH FILE BACKUP
+                            </label>
+                        </div>
+                        
+                        <p class="info-text">
+                            <i class="fas fa-info-circle"></i> Simpan file ke WA atau Google Drive agar aman.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-    function hapus(id) {
-        if(confirm("Hapus produk ini?")) {
-            database = database.filter(x => x.id !== id);
-            localStorage.setItem('stok_app_db', JSON.stringify(database));
-            renderData();
+            <!-- List Pages -->
+            <div id="page-list" class="page">
+                <div class="card">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="cari" placeholder="Cari nama atau kode produk..." class="search-input">
+                    </div>
+                </div>
+                
+                <div id="list-container">
+                    <div class="empty-state" id="emptyState">
+                        <i class="fas fa-box-open"></i>
+                        <h3>Belum ada produk</h3>
+                        <p>Tambahkan produk baru dari menu TAMBAH</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <h3 id="confirmTitle">Konfirmasi</h3>
+                <p id="confirmMessage">Apakah Anda yakin?</p>
+                <div class="modal-actions">
+                    <button class="btn-outline" id="confirmCancel">Batal</button>
+                    <button class="btn-danger" id="confirmOk">Ya, Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
         }
-    }
-
-    // FUNGSI BACKUP (EXPORT)
-    function exportData() {
-        if(database.length === 0) return alert("Tidak ada data untuk dibackup!");
-        const dataStr = JSON.stringify(database);
-        const dataBlob = new Blob([dataStr], {type: 'application/json'});
-        const url = URL.createObjectURL(dataBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'backup_stok_' + new Date().toLocaleDateString() + '.json';
-        link.click();
-    }
-
-    // FUNGSI RESTORE (IMPORT)
-    function importData(event) {
-        const file = event.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const importedData = JSON.parse(e.target.result);
-                if(Array.isArray(importedData)) {
-                    database = importedData;
-                    localStorage.setItem('stok_app_db', JSON.stringify(database));
-                    alert("Data Berhasil Dipulihkan!");
-                    location.reload();
-                } else {
-                    alert("Format file salah!");
-                }
-            } catch (err) {
-                alert("Gagal membaca file!");
-            }
-        };
-        reader.readAsText(file);
-    }
-</script>
+    </script>
 </body>
-</html>
+                </html>
