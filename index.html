@@ -3,174 +3,744 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2563eb">
-    <meta name="description" content="Aplikasi manajemen stok produk dengan kategori NARITA, VR, KUDUS, dan LAIN LAIN">
-    <title>Stok Pintar Manajemen</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2633/2633807.png">
-    <link rel="stylesheet" href="styles.css">
+    <title>Stok Pintar - Manajemen Stok Produk</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-hover: rgba(0, 0, 0, 0.12);
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.05);
+        }
+        
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        
+        .header-content {
+            text-align: center;
+        }
+        
+        .header-content h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header-content p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Navigation */
+        .main-nav {
+            display: flex;
+            background: white;
+            padding: 8px 4px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 88px;
+            z-index: 99;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .main-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            min-width: 70px;
+            background: none;
+            border: none;
+            padding: 12px 8px;
+            color: var(--gray);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            border-radius: 10px;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .nav-btn i {
+            font-size: 18px;
+        }
+        
+        .nav-btn.active {
+            color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .nav-btn:hover:not(.active) {
+            color: var(--dark);
+            background: rgba(0, 0, 0, 0.03);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            z-index: 2;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 14px 14px 14px 48px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+            color: var(--dark);
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px var(--shadow);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Product List */
+        .product-list {
+            display: grid;
+            gap: 12px;
+        }
+        
+        /* Product Card - NEW DESIGN */
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 3px 10px var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px var(--shadow-hover);
+        }
+        
+        /* Product Info (LEFT SIDE) */
+        .product-info {
+            flex: 1;
+            min-width: 0; /* Untuk text truncate */
+        }
+        
+        .product-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 6px;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+        
+        .product-code {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .product-badge {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .price-container {
+            margin-top: 12px;
+        }
+        
+        .price-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+        
+        .buy-price {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .sell-price {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+        
+        /* Controls (RIGHT SIDE) */
+        .product-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 16px;
+            min-width: 120px;
+        }
+        
+        /* Stock Control */
+        .stock-container {
+            background: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .stock-label {
+            font-size: 11px;
+            color: var(--gray);
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stock-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 4px 0;
+            line-height: 1;
+        }
+        
+        .stock-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .stock-btn {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .stock-btn:hover {
+            background: rgba(37, 99, 235, 0.05);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .stock-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Delete Button */
+        .delete-container {
+            text-align: center;
+        }
+        
+        .delete-btn {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: var(--danger);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            min-width: 120px;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.1);
+        }
+        
+        .delete-btn:hover {
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15);
+        }
+        
+        .delete-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 52px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        /* Category Badge */
+        .category-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .category-NARITA { background: #dbeafe; color: #1e40af; }
+        .category-VR { background: #f0f9ff; color: #0369a1; }
+        .category-KUDUS { background: #fef3c7; color: #92400e; }
+        .category-LAIN { background: #f3e8ff; color: #6b21a8; }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .product-card {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .product-controls {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                min-width: 100%;
+            }
+            
+            .stock-container {
+                flex: 1;
+            }
+            
+            .delete-container {
+                flex: 1;
+            }
+            
+            .delete-btn {
+                min-width: 0;
+                width: 100%;
+            }
+            
+            .sell-price {
+                font-size: 24px;
+            }
+        }
+        
+        /* Add Page Styles */
+        .add-form {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 3px 10px var(--shadow);
+            margin-bottom: 16px;
+        }
+        
+        .form-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            color: var(--dark);
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        /* Backup Section */
+        .backup-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 3px 10px var(--shadow);
+            text-align: center;
+        }
+        
+        .backup-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .backup-buttons {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .btn-backup, .btn-restore {
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        
+        .btn-backup {
+            background: #334155;
+            color: white;
+        }
+        
+        .btn-restore {
+            background: #f97316;
+            color: white;
+        }
+        
+        .btn-backup:hover, .btn-restore:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .backup-note {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s;
+            min-width: 280px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+        
+        .modal-message {
+            color: var(--gray);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-outline, .btn-danger {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .btn-outline {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--border);
+        }
+        
+        .btn-outline:hover {
+            background: var(--light);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+        }
+    </style>
 </head>
 <body>
-    <!-- App Container -->
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="header-content">
-                <h1><i class="fas fa-boxes"></i> Stok Pintar</h1>
-                <p class="app-subtitle">Manajemen Stok Produk</p>
-            </div>
-            <div class="app-actions">
-                <button class="btn-icon" id="installBtn" title="Install Aplikasi">
-                    <i class="fas fa-download"></i>
-                </button>
-                <button class="btn-icon" id="themeToggle" title="Ubah Tema">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- Navigation -->
-        <nav class="main-nav">
-            <div class="nav-container">
-                <button class="nav-btn active" data-page="home">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>TAMBAH</span>
-                </button>
-                <button class="nav-btn" data-page="NARITA">
-                    <i class="fas fa-box"></i>
-                    <span>NARITA</span>
-                </button>
-                <button class="nav-btn" data-page="VR">
-                    <i class="fas fa-box"></i>
-                    <span>VR</span>
-                </button>
-                <button class="nav-btn" data-page="KUDUS">
-                    <i class="fas fa-box"></i>
-                    <span>KUDUS</span>
-                </button>
-                <button class="nav-btn" data-page="LAIN">
-                    <i class="fas fa-boxes-stacked"></i>
-                    <span>LAIN</span>
-                </button>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Home Page - Tambah Produk -->
-            <div id="page-home" class="page active">
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-plus-circle"></i> TAMBAH PRODUK BARU</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="kode">Kode Produk</label>
-                            <input type="text" id="kode" placeholder="Masukkan kode produk" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <label for="nama">Nama Produk</label>
-                            <input type="text" id="nama" placeholder="Masukkan nama produk" class="form-input" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="beli">Harga Dasar</label>
-                                <input type="number" id="beli" placeholder="Harga dasar" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label for="jual">Harga Jual</label>
-                                <input type="number" id="jual" placeholder="Harga jual" class="form-input" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="kategori">Kategori</label>
-                            <select id="kategori" class="form-select">
-                                <option value="NARITA">NARITA</option>
-                                <option value="VR">VR</option>
-                                <option value="KUDUS">KUDUS</option>
-                                <option value="LAIN">LAIN LAIN</option>
-                            </select>
-                        </div>
-                        <button class="btn-primary btn-block" id="simpanProduk">
-                            <i class="fas fa-save"></i> SIMPAN PRODUK
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Backup/Restore Section -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-database"></i> PENCADANGAN DATA</h2>
-                    </div>
-                    <div class="card-body text-center">
-                        <button class="btn-secondary btn-block" id="backupBtn">
-                            <i class="fas fa-download"></i> DOWNLOAD BACKUP (.json)
-                        </button>
-                        
-                        <div class="file-upload-wrapper">
-                            <input type="file" id="fileInput" accept=".json" class="file-input">
-                            <label for="fileInput" class="btn-warning btn-block">
-                                <i class="fas fa-upload"></i> PILIH FILE BACKUP
-                            </label>
-                        </div>
-                        
-                        <p class="info-text">
-                            <i class="fas fa-info-circle"></i> Simpan file ke WA atau Google Drive agar aman.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- List Pages -->
-            <div id="page-list" class="page">
-                <div class="card">
-                    <div class="search-container">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="cari" placeholder="Cari nama atau kode produk..." class="search-input">
-                    </div>
-                </div>
-                
-                <div id="list-container">
-                    <div class="empty-state" id="emptyState">
-                        <i class="fas fa-box-open"></i>
-                        <h3>Belum ada produk</h3>
-                        <p>Tambahkan produk baru dari menu TAMBAH</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Toast Notification -->
-        <div id="toast" class="toast"></div>
-
-        <!-- Confirmation Modal -->
-        <div id="confirmModal" class="modal">
-            <div class="modal-content">
-                <h3 id="confirmTitle">Konfirmasi</h3>
-                <p id="confirmMessage">Apakah Anda yakin?</p>
-                <div class="modal-actions">
-                    <button class="btn-outline" id="confirmCancel">Batal</button>
-                    <button class="btn-danger" id="confirmOk">Ya, Hapus</button>
-                </div>
-            </div>
+    <!-- Header -->
+    <div class="app-header">
+        <div class="header-content">
+            <h1><i class="fas fa-boxes-stacked"></i> Stok Pintar</h1>
+            <p>Manajemen Stok Produk</p>
         </div>
     </div>
-
-    <script src="app.js"></script>
-    <script>
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registered:', registration);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
-        }
-    </script>
-</body>
-                </html>
+    
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <button class="nav-btn active" data-page="tambah">
+            <i class="fas fa-plus-circle"></i>
+            <span>TAMBAH</span>
+        </button>
+        <button class="nav-btn" data-page="NARITA">
+            <i class="fas fa-box"></i>
+            <span>NARITA</span>
+        </button>
+        <button class="nav-btn" data-page="VR">
+            <i class="fas fa-box"></i>
+            <span>VR</span>
+        </button>
+        <button class="nav-btn" data-page="KUDUS">
+            <i class="fas fa-box"></i>
+            <span>KUDUS</span>
+        </button>
+        <button class="nav-btn" data-page="LAIN">
+            <i class="fas fa-boxes-stacked"></i>
+            <span>LAIN</span>
+        </button>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Add Product Page -->
+        <div id="page-tambah" class="page active">
+            <div class="add-form">
+                <div class="form-title">
+                    <i class="fas fa-plus-circle"></i> TAMBAH PRODUK BARU
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="kode">Kode Produk (Opsional)</label>
+                    <input type
