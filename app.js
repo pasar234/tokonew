@@ -19,8 +19,14 @@ const toast = document.getElementById('toast');
 const themeToggle = document.getElementById('themeToggle');
 const installBtn = document.getElementById('installBtn');
 
+// Debug info
+console.log('Aplikasi Stok Pintar dimuat');
+console.log('Jumlah produk:', database.length);
+console.log('Path:', window.location.href);
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM siap, inisialisasi...');
     initializeTheme();
     initializeNavigation();
     initializeEventListeners();
@@ -28,17 +34,25 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Check for PWA install prompt
     window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('PWA install prompt tersedia');
         e.preventDefault();
         deferredPrompt = e;
         installBtn.style.display = 'flex';
+        showToast('Aplikasi bisa diinstall!', 'success');
     });
     
     // Listen for app installed
     window.addEventListener('appinstalled', () => {
+        console.log('Aplikasi terinstall');
         deferredPrompt = null;
         installBtn.style.display = 'none';
         showToast('Aplikasi berhasil diinstal!', 'success');
     });
+    
+    // Cek jika running sebagai PWA
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('Running sebagai PWA');
+    }
 });
 
 // Initialize Theme
@@ -142,7 +156,7 @@ function simpanData() {
     database.push(produkBaru);
     saveToLocalStorage();
     
-    showToast(`Produk "${nama}" berhasil ditambahkan ke ${kategori.toUpperCase()}`, 'success');
+    showToast(`✅ "${nama}" ditambahkan ke ${kategori.toUpperCase()}`, 'success');
     
     // Clear form
     document.getElementById('nama').value = '';
@@ -156,6 +170,8 @@ function simpanData() {
 
 // Render Data
 function renderData() {
+    if (!currentCategory) return;
+    
     const search = searchInput.value.toLowerCase();
     const filteredData = database.filter(item => 
         item.kategori === currentCategory && 
@@ -177,13 +193,15 @@ function renderData() {
     listContainer.innerHTML = filteredData.map(item => `
         <div class="product-card" data-id="${item.id}">
             <div class="product-header">
-                <div style="flex: 1;">
+                <div class="product-info">
                     <h3 class="product-title">${escapeHtml(item.nama)}</h3>
                     <div class="product-code">Kode: ${escapeHtml(item.kode)}</div>
-                    <div class="product-code">Beli: ${formatRupiah(item.beli)}</div>
-                    <div class="product-price">Jual: ${formatRupiah(item.jual)}</div>
+                    <div class="product-harga">
+                        <span class="harga-label">Beli:</span> ${formatRupiah(item.beli)}<br>
+                        <span class="harga-label">Jual:</span> <strong>${formatRupiah(item.jual)}</strong>
+                    </div>
                     <button class="delete-btn" onclick="showDeleteConfirm(${item.id})">
-                        <i class="fas fa-trash"></i> Hapus Produk
+                        <i class="fas fa-trash"></i> Hapus
                     </button>
                 </div>
                 <div class="stock-control">
@@ -211,7 +229,7 @@ function ubahStok(id, val) {
         // Show stock change notification
         const produk = database[index];
         const action = val > 0 ? 'ditambah' : 'dikurangi';
-        showToast(`Stok ${produk.nama} ${action} menjadi ${newStock}`, 'success');
+        showToast(`📦 ${produk.nama} ${action} menjadi ${newStock}`, 'success');
     }
 }
 
@@ -221,7 +239,7 @@ function showDeleteConfirm(id) {
     if (!produk) return;
     
     confirmTitle.textContent = 'Hapus Produk';
-    confirmMessage.textContent = `Apakah Anda yakin ingin menghapus "${produk.nama}"?`;
+    confirmMessage.textContent = `Yakin hapus "${produk.nama}"?`;
     confirmOk.dataset.id = id;
     confirmModal.classList.add('show');
 }
@@ -233,13 +251,13 @@ function handleConfirm() {
     saveToLocalStorage();
     renderData();
     confirmModal.classList.remove('show');
-    showToast('Produk berhasil dihapus', 'success');
+    showToast('🗑️ Produk dihapus', 'success');
 }
 
 // Export Data
 function exportData() {
     if (database.length === 0) {
-        showToast('Tidak ada data untuk dibackup!', 'warning');
+        showToast('❌ Tidak ada data untuk dibackup!', 'warning');
         return;
     }
     
@@ -254,7 +272,7 @@ function exportData() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
     
-    showToast('Backup berhasil didownload!', 'success');
+    showToast('✅ Backup berhasil didownload!', 'success');
 }
 
 // Import Data
@@ -271,14 +289,14 @@ function importData(event) {
                 if (confirm('Data lama akan diganti dengan data backup. Lanjutkan?')) {
                     database = importedData;
                     saveToLocalStorage();
-                    showToast('Data berhasil dipulihkan!', 'success');
+                    showToast('✅ Data berhasil dipulihkan!', 'success');
                     setTimeout(() => location.reload(), 1000);
                 }
             } else {
-                showToast('Format file tidak valid!', 'error');
+                showToast('❌ Format file tidak valid!', 'error');
             }
         } catch (err) {
-            showToast('Gagal membaca file backup', 'error');
+            showToast('❌ Gagal membaca file backup', 'error');
             console.error(err);
         }
     };
@@ -302,7 +320,7 @@ function toggleTheme() {
     localStorage.setItem('theme', newTheme);
     updateThemeIcon(newTheme);
     
-    showToast(`Tema ${newTheme === 'dark' ? 'gelap' : 'terang'} diaktifkan`, 'success');
+    showToast(`🌓 Tema ${newTheme === 'dark' ? 'gelap' : 'terang'} diaktifkan`, 'success');
 }
 
 // Update Theme Icon
@@ -319,7 +337,7 @@ async function installApp() {
     const { outcome } = await deferredPrompt.userChoice;
     
     if (outcome === 'accepted') {
-        showToast('Aplikasi sedang diinstal...', 'success');
+        showToast('📱 Aplikasi sedang diinstal...', 'success');
     }
     
     deferredPrompt = null;
@@ -381,9 +399,17 @@ document.addEventListener('keydown', (e) => {
 
 // Offline Detection
 window.addEventListener('online', () => {
-    showToast('Koneksi internet kembali', 'success');
+    showToast('🌐 Koneksi internet kembali', 'success');
 });
 
 window.addEventListener('offline', () => {
-    showToast('Anda sedang offline. Data disimpan secara lokal.', 'warning');
+    showToast('📴 Anda sedang offline. Data disimpan secara lokal.', 'warning');
+});
+
+// Auto-focus on page load
+window.addEventListener('load', () => {
+    const namaInput = document.getElementById('nama');
+    if (namaInput && pageHome.classList.contains('active')) {
+        setTimeout(() => namaInput.focus(), 500);
+    }
 });
