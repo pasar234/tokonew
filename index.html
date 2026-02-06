@@ -10,202 +10,124 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
         
         :root {
-            --primary-color: #4a6fa5;
-            --secondary-color: #6c8bc7;
-            --danger-color: #d32f2f;
-            --warning-color: #ff9800;
-            --success-color: #2e7d32;
-            --light-bg: #f8f9fa;
-            --border-color: #e0e0e0;
-            --text-color: #333;
-            --text-light: #666;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --radius: 10px;
+            --primary: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.05);
+            --radius: 12px;
         }
         
         body {
-            background-color: #f5f5f5;
-            color: var(--text-color);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-        
-        .container {
+            background-color: #f1f5f9;
+            color: var(--dark);
             max-width: 500px;
             margin: 0 auto;
-            background-color: white;
             min-height: 100vh;
-            box-shadow: var(--shadow);
-            position: relative;
         }
         
         /* Header */
         .app-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             padding: 20px 16px;
             text-align: center;
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         
-        .app-title {
+        .app-header h1 {
             font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 5px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .app-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
+            font-weight: 500;
         }
         
-        /* Backup Restore Buttons */
-        .backup-restore {
-            position: absolute;
-            top: 20px;
-            right: 16px;
+        /* Navigation */
+        .main-nav {
             display: flex;
-            gap: 8px;
-        }
-        
-        .backup-btn, .restore-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .backup-btn:hover, .restore-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        /* Menu Categories */
-        .categories {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 10px;
-            background-color: var(--light-bg);
-            border-bottom: 1px solid var(--border-color);
+            background: white;
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border);
             position: sticky;
-            top: 0;
-            z-index: 10;
+            top: 80px;
+            z-index: 99;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
-        .category {
+        .main-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            min-width: 75px;
+            background: none;
+            border: none;
+            padding: 10px 6px;
+            color: var(--gray);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--text-light);
-            font-size: 12px;
-            padding: 8px 12px;
-            border-radius: var(--radius);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            min-width: 60px;
-            position: relative;
+            gap: 5px;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
         
-        .category.active {
-            color: var(--primary-color);
-            background-color: rgba(74, 111, 165, 0.1);
-            font-weight: 600;
-        }
-        
-        .category.active::after {
-            content: '';
-            position: absolute;
-            bottom: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 3px;
-            background-color: var(--primary-color);
-            border-radius: 3px;
-        }
-        
-        .category-icon {
-            background-color: white;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        .nav-btn i {
             font-size: 18px;
-            color: var(--primary-color);
-            transition: all 0.3s;
         }
         
-        .category.active .category-icon {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 8px rgba(74, 111, 165, 0.3);
+        .nav-btn.active {
+            color: var(--primary);
+            background: rgba(37, 99, 235, 0.08);
         }
         
-        /* Search Bar */
-        .search-container {
-            padding: 15px 16px;
-            background-color: white;
-            position: sticky;
-            top: 100px;
-            z-index: 5;
+        .nav-btn:hover:not(.active) {
+            background: rgba(0, 0, 0, 0.02);
         }
         
-        .search-box {
-            display: flex;
-            align-items: center;
-            background-color: #f5f5f5;
-            border-radius: var(--radius);
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s;
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+            padding-bottom: 30px;
         }
         
-        .search-box:focus-within {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.1);
+        .page {
+            display: none;
         }
         
-        .search-icon {
-            color: var(--text-light);
-            margin-right: 10px;
-        }
-        
-        .search-input {
-            border: none;
-            background: transparent;
-            width: 100%;
-            font-size: 15px;
-            outline: none;
-        }
-        
-        /* Products List */
-        .products-list {
-            padding: 0 16px 100px;
-            min-height: 300px;
-        }
-        
-        .product-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border-color);
-            animation: fadeIn 0.5s ease;
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
         
         @keyframes fadeIn {
@@ -213,490 +135,620 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .product-row {
-            display: flex;
-            align-items: center;
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            z-index: 2;
+        }
+        
+        .search-input {
             width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.2s;
         }
         
-        .product-image {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #f0f4f8, #e3e9f2);
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Product List */
+        .product-list {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: var(--primary-color);
-            font-size: 22px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            flex-direction: column;
+            gap: 12px;
         }
         
+        /* NEW LAYOUT: Product Card with Side Controls */
+        .product-card {
+            background: white;
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Left Side: Product Info */
         .product-info {
             flex: 1;
+            min-width: 0;
+            padding-right: 10px;
         }
         
+        .product-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .category-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .category-narita { background: #dbeafe; color: #1e40af; }
+        .category-vr { background: #f0f9ff; color: #0369a1; }
+        .category-kudus { background: #fef3c7; color: #92400e; }
+        .category-lain { background: #f3e8ff; color: #6b21a8; }
+        
         .product-name {
-            font-weight: 600;
-            font-size: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1.4;
             margin-bottom: 6px;
-            color: var(--text-color);
+            word-break: break-word;
+        }
+        
+        .product-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: var(--gray);
+            flex-wrap: wrap;
+        }
+        
+        .product-code {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
         
         .product-price {
-            font-size: 14px;
-            color: var(--danger-color);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 10px;
-            border-radius: 6px;
-            transition: all 0.2s;
-            background-color: rgba(211, 47, 47, 0.05);
+            margin-top: 8px;
         }
         
-        .product-price:hover {
-            background-color: rgba(211, 47, 47, 0.1);
+        .price-label {
+            font-size: 11px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
         }
         
-        .stock-control {
+        .buy-price {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            background-color: #f5f5f5;
-            border-radius: 20px;
-            padding: 6px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            gap: 5px;
+        }
+        
+        .sell-price {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--dark);
+            line-height: 1;
+        }
+        
+        /* Right Side: Controls */
+        .product-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+            min-width: 130px;
+        }
+        
+        /* Stock Control */
+        .stock-control {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .stock-label {
+            font-size: 10px;
+            color: var(--gray);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        
+        .stock-value {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 5px 0;
+            line-height: 1;
+        }
+        
+        .stock-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
         }
         
         .stock-btn {
-            background-color: white;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary-color);
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: all 0.2s;
         }
         
         .stock-btn:hover {
-            transform: scale(1.05);
+            background: #f1f5f9;
+            border-color: var(--primary);
+            color: var(--primary);
         }
         
         .stock-btn:active {
             transform: scale(0.95);
         }
         
-        .stock-count {
-            min-width: 42px;
-            text-align: center;
+        /* Delete Button */
+        .delete-control {
+            width: 100%;
+        }
+        
+        .delete-btn {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: none;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 700;
-            font-size: 16px;
-            margin: 0 8px;
-        }
-        
-        /* Action Buttons */
-        .action-buttons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+            cursor: pointer;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 100;
-        }
-        
-        .add-product-btn, .export-btn, .import-btn {
-            background-color: var(--primary-color);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-            position: relative;
+            gap: 6px;
+            width: 100%;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
         }
         
-        .export-btn {
-            background-color: var(--success-color);
+        .delete-btn:hover {
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.15);
         }
         
-        .import-btn {
-            background-color: var(--warning-color);
+        .delete-btn:active {
+            transform: translateY(0);
         }
         
-        .add-product-btn:hover, .export-btn:hover, .import-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
-        
-        .btn-label {
-            position: absolute;
-            top: -30px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        
-        .add-product-btn:hover .btn-label,
-        .export-btn:hover .btn-label,
-        .import-btn:hover .btn-label {
-            opacity: 1;
-        }
-        
-        /* Empty state */
+        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: var(--text-light);
-            animation: fadeIn 0.5s ease;
+            color: var(--gray);
         }
         
         .empty-state i {
-            font-size: 70px;
-            margin-bottom: 20px;
-            color: #ddd;
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
         }
         
         .empty-state h3 {
             font-size: 18px;
-            margin-bottom: 10px;
-            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
         }
         
         .empty-state p {
             font-size: 14px;
-            max-width: 250px;
-            margin: 0 auto;
         }
         
-        /* Category Page Header */
-        .category-header {
-            padding: 15px 16px;
-            background-color: var(--light-bg);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 160px;
-            z-index: 5;
+        /* Add Page */
+        .add-form {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 1px solid var(--border);
         }
         
-        .category-title {
+        .form-title {
             font-size: 18px;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .back-button {
-            background: none;
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            color: var(--dark);
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
             border: none;
-            color: var(--primary-color);
-            font-size: 18px;
+            padding: 16px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px -1px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        /* Backup Section */
+        .backup-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .backup-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .backup-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .btn-backup, .btn-restore {
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: var(--radius);
-            transition: background-color 0.2s;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
         }
         
-        .back-button:hover {
-            background-color: rgba(74, 111, 165, 0.1);
+        .btn-backup {
+            background: #334155;
+            color: white;
         }
         
-        /* Modal Styles */
-        .modal-overlay {
+        .btn-restore {
+            background: #f97316;
+            color: white;
+        }
+        
+        .btn-backup:hover, .btn-restore:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .backup-note {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
+            background: rgba(0,0,0,0.5);
             align-items: center;
             justify-content: center;
-            z-index: 2000;
-            display: none;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
         }
         
         .modal-content {
-            background-color: white;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 420px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            animation: modalFadeIn 0.3s ease;
-            max-height: 90vh;
-            overflow-y: auto;
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            animation: modalIn 0.3s ease;
         }
         
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
         
         .modal-title {
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary-color);
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--text-light);
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
+            color: var(--dark);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background-color 0.2s;
+            gap: 10px;
         }
         
-        .close-modal:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-color);
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 14px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.1);
+        .modal-message {
+            color: var(--gray);
+            margin-bottom: 24px;
+            line-height: 1.5;
         }
         
         .modal-actions {
             display: flex;
-            justify-content: flex-end;
             gap: 12px;
-            margin-top: 25px;
         }
         
-        .btn {
-            padding: 12px 24px;
-            border-radius: var(--radius);
+        .btn-outline, .btn-danger {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             border: none;
-            font-size: 15px;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
         
-        .btn-secondary {
-            background-color: #f0f0f0;
-            color: var(--text-color);
+        .btn-outline {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--border);
         }
         
-        .btn-secondary:hover {
-            background-color: #e0e0e0;
+        .btn-outline:hover {
+            background: var(--light);
         }
         
-        .btn-primary {
-            background-color: var(--primary-color);
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
             color: white;
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
         }
         
-        .btn-primary:hover {
-            background-color: #3a5a85;
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px -1px rgba(239, 68, 68, 0.3);
         }
         
-        .current-price {
-            font-weight: 700;
-            color: var(--danger-color);
-        }
-        
-        /* Category Options */
-        .category-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .category-option {
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .category-option:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .category-option.selected {
-            background-color: rgba(74, 111, 165, 0.1);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        /* Toast Notification */
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 100px;
+            bottom: 20px;
             left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--success-color);
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark);
             color: white;
-            padding: 12px 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            padding: 14px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
+            min-width: 260px;
+            text-align: center;
+            font-weight: 500;
             max-width: 90%;
         }
         
         .toast.show {
+            transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
         
-        .toast.error {
-            background-color: var(--danger-color);
-        }
-        
-        .toast.warning {
-            background-color: var(--warning-color);
-        }
-        
         /* Responsive */
-        @media (max-width: 500px) {
-            .container {
-                box-shadow: none;
+        @media (max-width: 480px) {
+            .product-card {
+                flex-direction: column;
+                gap: 16px;
             }
             
-            .category-name {
-                font-size: 11px;
+            .product-controls {
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+                min-width: 100%;
+                gap: 12px;
             }
             
-            .action-buttons {
-                right: 16px;
-                bottom: 16px;
+            .stock-control {
+                flex: 1;
             }
+            
+            .delete-control {
+                flex: 1;
+            }
+            
+            .sell-price {
+                font-size: 22px;
+            }
+            
+            .stock-value {
+                font-size: 24px;
+            }
+            
+            .product-name {
+                font-size: 16px;
+            }
+            
+            .main-content {
+                padding: 14px;
+            }
+        }
+        
+        /* Animation for stock change */
+        @keyframes stockChange {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .stock-change {
+            animation: stockChange 0.3s ease;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="app-header">
-            <h1 class="app-title">Stok Pintar</h1>
-            <p class="app-subtitle">Manajemen Stok Produk</p>
-            
-            <!-- Backup & Restore Buttons -->
-            <div class="backup-restore">
-                <button class="backup-btn" id="backupBtn" title="Backup Data">
-                    <i class="fas fa-download"></i>
-                </button>
-                <button class="restore-btn" id="restoreBtn" title="Restore Data">
-                    <i class="fas fa-upload"></i>
-                </button>
-            </div>
-        </header>
-        
-        <!-- Menu Categories -->
-        <nav class="categories">
-            <div class="category active" data-category="tambah">
-                <div class="category-icon">T+</div>
-                <span class="category-name">TAMBAH</span>
-            </div>
-            <div class="category" data-category="narita">
-                <div class="category-icon">N</div>
-                <span class="category-name">NARITA</span>
-            </div>
-            <div class="category" data-category="vr">
-                <div class="category-icon">V</div>
-                <span class="category-name">VR</span>
-            </div>
-            <div class="category" data-category="kudus">
-                <div class="category-icon">K</div>
-                <span class="category-name">KUDUS</span>
-            </div>
-            <div class="category" data-category="lain">
-                <div class="category-icon">L</div>
-                <span class="category-name">LAIN</span>
-            </div>
-        </nav>
-        
-        <!-- Main Content Area -->
-        <main id="content-area">
-            <!-- Search Bar -->
-            <div class="search-container">
-                <div class="search-box">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Cari nama atau produk...">
-                </div>
-            </div>
-            
-            <!-- Products List -->
-            <div class="products-list" id="productsList">
-                <!-- Products will be loaded here -->
-            </div>
-        </main>
-        
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button class="add-product-btn" id="addProductBtn" title="Tambah Produk">
-                <i class="fas fa-plus"></i>
-                <span class="btn-label">Tambah Produk</span>
-            </button>
-            <button class="export-btn" id="exportBtn" title="Export Data">
-                <i c
+    <!-- Header -->
+    <div class="app-header">
+        <h1><i class="fas fa-boxes-stacked"></i> Stok Pintar</h1>
+        <p class="app-subtitle">Manajemen Stok Produk</p>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <button class="nav-btn active" data-page="tambah">
+            <i class="fas fa-plus-circle"></i>
+            <span>Tambah</span>
+        </button>
+        <button class="nav-btn" data-page="NARITA">
+            <i class="fas fa-box"></i>
+            <span>Narita</span>
+        </button>
+        <button class="nav-btn" data-page="VR">
+            <i class="fas fa-box"></i>
+            <span>VR</span>
+        </button>
+        <button class="nav-btn" data-page="KUDUS">
+            <i class="fas fa-box"></i>
+            <span>Kudus</span>
+        </button>
+        <button class="nav-btn" data-page="LAIN">
+            <i class="fas fa-boxes-stacked"></i>
+            <span>Lain</span>
+        </button>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Add Product Page -->
+        <div id="page-tambah" class="pag
